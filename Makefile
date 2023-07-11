@@ -1,18 +1,18 @@
 #.PHONY: build
 build:
-	sudo docker-compose up --build -d
+	docker compose up --build -d
 
 #.PHONY: destroy
 destroy:
-	sudo docker-compose down --rmi all --volumes --remove-orphans
+	docker compose down --rmi all --volumes --remove-orphans
 
 #.PHONY: up
 up:
-	sudo docker-compose up -d
+	docker compose up -d
 
 #.PHONY: down
 down:
-	sudo docker-compose down
+	docker compose down
 
 #.PHONY: restart
 restart: down up
