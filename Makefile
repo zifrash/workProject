@@ -19,3 +19,7 @@ restart: down up
 
 #.PHONY: rebuild
 rebuild: destroy build
+
+#.PHONY: install
+install:
+	docker compose exec php composer require php-amqplib/php-amqplib
