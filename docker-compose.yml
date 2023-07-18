@@ -48,18 +48,21 @@ services:
 
   rabbitmq:
     image: rabbitmq:management-alpine
+    # image: rabbitmq:alpine
     ports:
       - "15672:15672"
     hostname: rabbitmq
     volumes:
-      - rabbitmq:/var/lib/rabbitmq
+      - rabbitmqdata:/var/lib/rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
       - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit ${RABBITMQ_DISK_LIMIT}
+    depends_on:
+      - php
     restart: unless-stopped
 
 volumes:
   pgdata:
   redisdata:
-  rabbitmq:
+  rabbitmqdata:

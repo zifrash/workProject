@@ -22,4 +22,4 @@ rebuild: destroy build
 
 #.PHONY: install
 install:
-	docker compose exec php composer require php-amqplib/php-amqplib
+	docker compose exec php composer install

@@ -10,7 +10,6 @@ RUN apk add --no-cache libpq-dev autoconf build-base linux-headers && \
     pecl install redis && docker-php-ext-enable redis
 
 # last version on git
-# https://github.com/phpredis/phpredis/
 # RUN apk add git autoconf build-base && \
 #    git clone https://github.com/phpredis/phpredis.git && cd phpredis && \
 #    phpize && ./configure && make && make install && \
