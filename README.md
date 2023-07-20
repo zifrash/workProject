@@ -41,7 +41,10 @@ make composer-remove
 ```
 
 ## ENV файл:
-В .env файле лежат найстройки для подключения к postgres, redis, rabbitmq. На продакшене, этот файл добавляется в .gitignore.
+В .env файле лежат найстройки для подключения к postgres, redis, rabbitmq. Так же настройка часового пояса. На продакшене, этот файл добавляется в .gitignore.
+
+## Папка docker
+В папке docker лежат файлы найстроек nginx (docker/conf.d/default.conf) и php (docker/custom.php.ini)
 
 ## Полезные команды:
 Пересоздает файлы с зависимостями композера.

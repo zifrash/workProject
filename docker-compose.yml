@@ -5,8 +5,11 @@ services:
     build:
       context: ./
       dockerfile: ./docker/php/Dockerfile
+      args:
+        TIMEZONE: ${TIMEZONE}
     volumes:
       - .:/var/www/html
+      - ./docker/php/custom.php.ini:/usr/local/etc/php/conf.d/custom.php.ini
     depends_on:
       - db
     restart: unless-stopped
@@ -31,6 +34,7 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - PGDATA=/var/lib/postgresql/data/pgdata
+      - PGTZ=${TIMEZONE}
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
