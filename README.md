@@ -1,44 +1,13 @@
-## Make command:
-Команда первого запуска, запустит наши образы (php, nginx, postgres, redis, rabbitmq), и произведет первичную настройку. Так же запустит composer install.
+## Make команды:
+Рекомендую использовать make команды, что бы увидеть список команд и их описание, выполните в консоли:
+```bash
+make
+```
+Например, одна из команд:
 ```bash
 make first-build
 ```
-Удалит папку vendor (composer), а так же все докер образы. И заново все соберет (first-build).
-```bash
-make hard-rebuild
-```
-Скачает, докер образы и запустит их.
-```bash
-make build
-```
-Удалит докер образы.
-```bash
-make destroy
-```
-Запустит работу докер образов.
-```bash
-make start
-```
-Остановит работу докер образов.
-```bash
-make stop
-```
-Перезапустит докер образы.
-```bash
-make restart
-```
-Переустановит докер образы (destroy build).
-```bash
-make rebuild
-```
-Установит пакеты composer (composer.json).
-```bash
-make composer-install
-```
-Удалит пакеты composer (папку vendor).
-```bash
-make composer-remove
-```
+Команда первого запуска, запустит наши образы (php, nginx, postgres, redis, rabbitmq), и произведет первичную настройку. Так же запустит composer install.
 
 ## ENV файл:
 В .env файле лежат найстройки для подключения к postgres, redis, rabbitmq. Так же настройка часового пояса. На продакшене, этот файл добавляется в .gitignore.
