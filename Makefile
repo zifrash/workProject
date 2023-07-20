@@ -1,8 +1,8 @@
 #.PHONY: first-start
-first-build: build docker-install
+first-build: build composer-install
 
 #.PHONY: hard-rebuild
-hard-rebuild: docker-remove destroy first-build
+hard-rebuild: composer-remove destroy first-build
 
 #.PHONY: build
 build:
@@ -27,8 +27,8 @@ restart: stop start
 rebuild: destroy build
 
 #.PHONY: install
-docker-install:
+composer-install:
 	docker compose exec php composer install
 
-docker-remove:
+composer-remove:
 	rm -rf vendor
