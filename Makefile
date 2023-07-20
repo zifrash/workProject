@@ -1,3 +1,9 @@
+#.PHONY: first-start
+first-build: build docker-install
+
+#.PHONY: hard-rebuild
+hard-rebuild: docker-remove destroy first-build
+
 #.PHONY: build
 build:
 	docker compose up --build -d
@@ -7,19 +13,22 @@ destroy:
 	docker compose down --rmi all --volumes --remove-orphans
 
 #.PHONY: up
-up:
+start:
 	docker compose up -d
 
 #.PHONY: down
-down:
+stop:
 	docker compose down
 
 #.PHONY: restart
-restart: down up
+restart: stop start
 
 #.PHONY: rebuild
 rebuild: destroy build
 
 #.PHONY: install
-install:
+docker-install:
 	docker compose exec php composer install
+
+docker-remove:
+	rm -rf vendor

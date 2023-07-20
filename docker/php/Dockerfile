@@ -1,21 +1,19 @@
 FROM php:8.2-fpm-alpine
 
-ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV COMPOSER_MEMORY_LIMIT=-1
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-RUN apk add --no-cache libpq-dev autoconf build-base linux-headers && \
+RUN apk add --no-cache git libpq-dev autoconf build-base linux-headers libzip-dev && \
+    docker-php-ext-install zip && \
     docker-php-ext-install pdo_pgsql && \
     docker-php-ext-install sockets && \
     pecl install redis && docker-php-ext-enable redis
 
-# last version on git
-# RUN apk add git autoconf build-base && \
-#    git clone https://github.com/phpredis/phpredis.git && cd phpredis && \
-#    phpize && ./configure && make && make install && \
-#    docker-php-ext-enable redis
+# last version php redis extension on git
+# RUN git clone https://github.com/phpredis/phpredis.git && cd phpredis && \
+#     phpize && ./configure && make && make install && \
+#     docker-php-ext-enable redis
 
 RUN adduser -D appuser wheel
 USER appuser
-
 WORKDIR /var/www/html/
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --chown=appuser:appuser ./docker/php/composer/*.pub /home/appuser/.composer/
