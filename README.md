@@ -29,11 +29,6 @@ docker compose exec php composer diagnose
 docker compose exec php composer validate
 ```
 
-Обновить composer под root пользователем
-```bash
-docker compose exec -u root php composer self-update
-```
-
 ## Полезная информация:
 [Установить docker на убунту](https://docs.docker.com/engine/install/ubuntu/#set-up-the-repository)\
 [Установить плагин compose на docker](https://docs.docker.com/compose/install/linux/#install-the-plugin-manually)

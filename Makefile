@@ -1,14 +1,18 @@
 .DEFAULT_GOAL:=help
 
 .PHONY: first-start
-first-build: build composer-install ## Команда первого запуска, запустит наши образы (php, nginx, postgres, redis, rabbitmq), и произведет первичную настройку. Так же запустит composer install.
+first-build: build-without-cache start composer-self-update composer-packages-install ## Команда первого запуска, запустит наши образы (php, nginx, postgres, redis, rabbitmq), и произведет первичную настройку. Так же запустит composer install.
 
 .PHONY: hard-rebuild
-hard-rebuild: composer-remove destroy first-build ## Удалит папку vendor (composer), а так же все докер образы. И заново все соберет (first-build).
+hard-rebuild: composer-packages-remove destroy first-build ## Удалит папку vendor (composer), а так же все докер образы. И заново все соберет (first-build).
+
+.PHONY: build-without-cache
+build-without-cache: ## Скачает, докер образы без кеша.
+	docker compose build --no-cache
 
 .PHONY: build
-build: ## Скачает, докер образы и запустит их.
-	docker compose up --build -d
+build: ## Скачает, докер.
+	docker compose build
 
 .PHONY: destroy
 destroy: ## Удалит докер образы.
@@ -26,15 +30,21 @@ stop: ## Остановит работу докер образов.
 restart: stop start ## Перезапустит докер образы.
 
 .PHONY: rebuild
-rebuild: destroy build ## Переустановит докер образы (destroy build).
+rebuild: destroy build start ## Переустановит докер образы (destroy build).
 
-.PHONY: composer-install
-composer-install: ## Установит пакеты composer (composer.json).
+.PHONY: composer-packages-install
+composer-packages-install: ## Установит пакеты composer (composer.json).
 	docker compose exec php composer install
 
-.PHONY: composer-remove
-composer-remove: ## Удалит пакеты composer (папку vendor).
+.PHONY: composer-packages-remove
+composer-packages-remove: ## Удалит пакеты composer (папку vendor).
 	rm -rf vendor
+
+.PHONY: composer-self-update
+composer-self-update: ## Обновить сам composer.
+	docker compose exec -u root php chmod 777 /usr/bin/
+	docker compose exec php composer self-update
+	docker compose exec -u root php chmod 755 /usr/bin/
 
 .PHONY: help
 help:

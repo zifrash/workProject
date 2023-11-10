@@ -19,8 +19,5 @@ RUN adduser -D appuser wheel
 USER appuser
 WORKDIR /var/www/html/
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --chown=appuser:appuser --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY --chown=appuser:appuser ./docker/php/composer/*.pub /home/appuser/.composer/
-
-USER root
-RUN composer self-update
