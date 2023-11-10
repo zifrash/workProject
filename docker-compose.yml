@@ -10,33 +10,36 @@ services:
     volumes:
       - .:/var/www/html
       - ./docker/php/custom.php.ini:/usr/local/etc/php/conf.d/custom.php.ini
+      - ./docker/timezone/${TIMEZONE}:/etc/localtime
     depends_on:
-      - db
+      - postgres
     restart: unless-stopped
 
-  server:
+  nginx:
     image: nginx:alpine
     ports:
       - "80:80"
     volumes:
       - .:/var/www/html
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/timezone/${TIMEZONE}:/etc/localtime
     depends_on:
       - php
     restart: unless-stopped
 
-  db:
+  postgres:
     image: postgres:alpine
     ports:
       - "5432:5432"
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+      - ./docker/timezone/${TIMEZONE}:/etc/localtime
     environment:
       - POSTGRES_DB=${DB_DATABASE}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - PGDATA=/var/lib/postgresql/data/pgdata
       - PGTZ=${TIMEZONE}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
   redis:
@@ -46,6 +49,7 @@ services:
       - "6379:6379"
     volumes:
       - redisdata:/data
+      - ./docker/timezone/${TIMEZONE}:/etc/localtime
     depends_on:
       - php
     restart: unless-stopped
@@ -58,6 +62,7 @@ services:
     hostname: rabbitmq
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
+      - ./docker/timezone/${TIMEZONE}:/etc/localtime
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
@@ -67,6 +72,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  pgdata:
+  postgresdata:
   redisdata:
   rabbitmqdata:
