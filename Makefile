@@ -32,6 +32,10 @@ restart: stop start ## Перезапустит докер образы.
 .PHONY: rebuild
 rebuild: destroy build start ## Переустановит докер образы (destroy build).
 
+.SILENT: composer
+composer: ## Передаст arg в php контейнер artisan
+	docker compose exec php composer $(arg)
+
 .PHONY: composer-packages-install
 composer-packages-install: ## Установит пакеты composer (composer.json).
 	docker compose exec php composer install
@@ -40,12 +44,23 @@ composer-packages-install: ## Установит пакеты composer (composer
 composer-packages-remove: ## Удалит пакеты composer (папку vendor).
 	rm -rf vendor
 
-.PHONY: composer-self-update
+.SILENT: composer-self-update
 composer-self-update: ## Обновить сам composer.
 	docker compose exec -u root php chmod 777 /usr/bin/
 	docker compose exec php composer self-update
 	docker compose exec -u root php chmod 755 /usr/bin/
 
+.PHONY: artisan
+artisan: ## Передаст arg в php контейнер artisan
+	docker compose exec php php artisan $(arg)
+
+.SILENT: test
+test: ## Передаст arg в php контейнер artisan
+	docker compose exec php php artisan test
+
+.SILENT: swagger-descriptions
+swagger-descriptions: ## Генерирует сваггер
+	docker compose exec php php artisan l5-swagger:generate
 .PHONY: help
 help:
 	@awk 'BEGIN {FS = ":.*##";} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)

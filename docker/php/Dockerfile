@@ -3,9 +3,7 @@ FROM php:8.2-fpm-alpine
 ARG TIMEZONE
 
 RUN apk add --no-cache git libpq-dev autoconf build-base linux-headers libzip-dev && \
-    docker-php-ext-install zip && \
-    docker-php-ext-install pdo_pgsql && \
-    docker-php-ext-install sockets && \
+    docker-php-ext-install zip sockets pgsql pdo_pgsql && \
     pecl install redis && docker-php-ext-enable redis
 
 # last version php redis extension on git
@@ -17,7 +15,7 @@ RUN echo date.timezone = ${TIMEZONE} > /usr/local/etc/php/conf.d/custom.timezone
 
 RUN adduser -D appuser wheel
 USER appuser
-WORKDIR /var/www/html/
+WORKDIR /var/www/html/example-app/
 
 COPY --chown=appuser:appuser --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY --chown=appuser:appuser ./docker/php/composer/*.pub /home/appuser/.composer/
